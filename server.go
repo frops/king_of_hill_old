@@ -1,24 +1,21 @@
 package main
 
 import (
-    "os"
-    "encoding/json"
-    "utils"
+    "github.com/gorilla/mux"
+    "./utils/config"
     "fmt"
+    "net/http"
 )
 
 func main() {
-    fmt.Println(config)
-}
+    config.Load();
 
-func loadConfig() {
-    file, _ := os.Open("conf.json")
-    decoder := json.NewDecoder(file)
-
-    err := decoder.Decode(&configuration)
+    err := http.ListenAndServe(":" + config.Config.Server.Port, nil)
     if err != nil {
-        fmt.Println("error:", err)
+        panic(err)
     }
-    fmt.Println(configuration.Users)
 
+    http.HandleFunc("/comments/get", handleGetComment)
+
+    fmt.Println("finish")
 }
