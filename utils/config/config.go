@@ -10,8 +10,15 @@ type Server struct {
 	Port string `json:"port"`
 }
 
+type Mongo struct {
+    Host string `json:"host"`
+    Port string `json:"port"`
+    Database string `json:"database"`
+}
+
 type ConfigStruct struct {
 	Server Server
+    Mongo Mongo
 }
 
 var (

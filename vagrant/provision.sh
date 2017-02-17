@@ -10,3 +10,5 @@ tar -xvf go1.8.linux-amd64.tar.gz
 mv go /usr/local
 
 echo "export PATH=\$PATH:/usr/local/go/bin" >> ~/.profile
+echo "export GOROOT=/usr/local/go" >> ~/.profile
+echo "export GOPATH=/vagrant" >> ~/.profile
