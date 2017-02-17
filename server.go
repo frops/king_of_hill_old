@@ -3,7 +3,7 @@ package main
 import (
     "os"
     "encoding/json"
-    "./utils/config"
+    "utils"
     "fmt"
 )
 
