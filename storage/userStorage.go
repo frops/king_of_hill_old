@@ -1,8 +1,8 @@
 package userStorage
 
 import (
-    "../models"
-    "../utils/mongo"
+    "github.com/frops/king_of_hill/models"
+    "github.com/frops/king_of_hill/utils/mongo"
 )
 
 func Create (user models.User) error  {
