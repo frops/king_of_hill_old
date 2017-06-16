@@ -1,7 +1,6 @@
 package main
 
 import (
-	"encoding/json"
 	"fmt"
 	"net/http"
 	"time"
@@ -22,31 +21,38 @@ var userAccess = map[string]string{
 }
 
 // Index - main controller
-func Index(w http.ResponseWriter, r *http.Request) {
+var Index = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	fmt.Fprintln(w, "Welcome")
-}
+})
 
 // TodoIndex -list of todos
 var TodoIndex = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+	//var token jwt.Token
+	token := r.Context().Value("user").(*jwt.Token)
+	//claims := token.Claims.(models.UserClaims)
+	cl := token.Claims.(jwt.MapClaims)
+
+	fmt.Println(cl["username"])
+
+	//	fmt.Println(r.Context().Value("Claims"))
+
 	todos := Todos{
 		Todo{Name: "Write presentation"},
 		Todo{Name: "Host meetup"},
 	}
 
-	if err := json.NewEncoder(w).Encode(todos); err != nil {
-		panic(err)
-	}
+	response.Ok(w, todos)
 })
 
 // TodoShow - show scpecify todo
-func TodoShow(w http.ResponseWriter, r *http.Request) {
+var TodoShow = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	vars := mux.Vars(r)
 	todoID := vars["todoID"]
 	fmt.Fprintln(w, "Todo show:", todoID)
-}
+})
 
 // AuthGetToken sd sds
-func AuthGetToken(w http.ResponseWriter, r *http.Request) {
+var AuthGetToken = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
 	r.ParseForm()
 
 	var login = r.FormValue("login")
@@ -65,7 +71,7 @@ func AuthGetToken(w http.ResponseWriter, r *http.Request) {
 
 		response.Ok(w, json)
 	}
-}
+})
 
 func validateUser(login string, password string) bool {
 	if val, ok := userAccess[login]; ok {

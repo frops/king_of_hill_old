@@ -9,11 +9,10 @@ import (
 )
 
 type Route struct {
-	Name         string
-	Method       string
-	Pattern      string
-	HandlerFunc  http.HandlerFunc
-	AuthRequired bool
+	Name        string
+	Method      string
+	Pattern     string
+	HandlerFunc http.Handler
 }
 
 // Routes is map for requests
@@ -24,19 +23,11 @@ func NewRouter() *mux.Router {
 	router := mux.NewRouter().StrictSlash(true)
 
 	for _, route := range routes {
-		var h http.Handler
-
-		if route.AuthRequired {
-			h = jwtMiddleware.Handler(route.HandlerFunc)
-		} else {
-			h = route.HandlerFunc
-		}
-
 		router.
 			Methods(route.Method).
 			Path(route.Pattern).
 			Name(route.Name).
-			Handler(h)
+			Handler(route.HandlerFunc)
 	}
 
 	return router
@@ -56,20 +47,17 @@ var routes = Routes{
 		"GET",
 		"/",
 		Index,
-		false,
 	},
 	Route{
 		"TodoIndex",
 		"GET",
 		"/todos",
-		TodoIndex,
-		true,
+		jwtMiddleware.Handler(TodoIndex),
 	},
 	Route{
 		"AuthGetToken",
 		"POST",
 		"/auth/get-token",
 		AuthGetToken,
-		false,
 	},
 }
