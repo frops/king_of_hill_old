@@ -2,8 +2,8 @@ package mongo
 
 import (
 	"gopkg.in/mgo.v2"
+	"../config"
 	"log"
-	"github.com/frops/king_of_hill/utils/config"
 )
 
 var Mongo *mgo.Session
@@ -21,5 +21,6 @@ func Connection() (*mgo.Session, *mgo.Database) {
 	}
 
     sess := Mongo.Copy()
+
 	return sess, sess.DB(config.Config.Mongo.Database)
 }

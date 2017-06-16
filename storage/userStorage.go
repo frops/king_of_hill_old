@@ -1,13 +1,8 @@
 package userStorage
 
-import (
-    "github.com/frops/king_of_hill/models"
-    "github.com/frops/king_of_hill/utils/mongo"
-)
+import "github.com/frops/king_of_hill/models"
 
-func Create (user models.User) error  {
-    sess, db := mongo.Connection()
-    defer sess.Close()
-
-    return db.C("user").Insert(user)
+// Create sdasd
+func Create(user models.User) error {
+	return nil
 }
