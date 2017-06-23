@@ -11,6 +11,7 @@ import (
 
 	jwt "github.com/dgrijalva/jwt-go"
 	"github.com/gorilla/mux"
+    "github.com/frops/king_of_hill/services"
 )
 
 var mySigningKey = []byte("secret")
@@ -71,6 +72,24 @@ var AuthGetToken = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request)
 
 		response.Ok(w, json)
 	}
+})
+
+// AuthSignup register user
+var AuthSignup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+    r.ParseForm()
+
+    var login = r.FormValue("login")
+    var password = r.FormValue("password")
+
+    user := services.Register(login, password)
+
+    exp := time.Now().Add(time.Hour * 24).Unix()
+    claim := createEmptyClaim(user.Username, exp)
+    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+    tokenString, _ := token.SignedString(mySigningKey)
+    json := map[string]string{"token": tokenString}
+
+    response.Ok(w, json)
 })
 
 func validateUser(login string, password string) bool {

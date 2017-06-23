@@ -60,4 +60,10 @@ var routes = Routes{
 		"/auth/get-token",
 		AuthGetToken,
 	},
+    Route{
+        "AuthGetToken",
+        "POST",
+        "/auth/signup",
+        AuthSignup,
+    },
 }
