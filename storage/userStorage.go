@@ -33,7 +33,7 @@ func Create(user *models.User) error {
     return nil
 }
 
-func Exists(user *models.User) error {
+func Exists(user *models.User) bool {
     session := libs.Open()
     defer session.Close()
 
@@ -43,8 +43,10 @@ func Exists(user *models.User) error {
     err := c.Find(bson.M{"username": user.Username}).One(&foundUser)
 
     if err != nil {
-        log.Fatal(err)
+        return false
     }
 
     fmt.Println(foundUser)
+
+    return true
 }

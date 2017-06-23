@@ -81,15 +81,22 @@ var AuthSignup = http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
     var login = r.FormValue("login")
     var password = r.FormValue("password")
 
-    user := services.Register(login, password)
+    validError := services.IsValidUserToRegister(login, password)
 
-    exp := time.Now().Add(time.Hour * 24).Unix()
-    claim := createEmptyClaim(user.Username, exp)
-    token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
-    tokenString, _ := token.SignedString(mySigningKey)
-    json := map[string]string{"token": tokenString}
+    if !validError {
+        err := httperrors.New("User exists", http.StatusInternalServerError)
+        response.Error(w, err)
+    } else {
+        registeredUser := services.Register(login, password)
 
-    response.Ok(w, json)
+        exp := time.Now().Add(time.Hour * 24).Unix()
+        claim := createEmptyClaim(registeredUser.Username, exp)
+        token := jwt.NewWithClaims(jwt.SigningMethodHS256, claim)
+        tokenString, _ := token.SignedString(mySigningKey)
+        json := map[string]string{"token": tokenString}
+
+        response.Ok(w, json)
+    }
 })
 
 func validateUser(login string, password string) bool {

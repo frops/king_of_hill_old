@@ -12,7 +12,7 @@ func Register(login string, password string) models.User {
         State: "new",
     }
 
-    if userStorage.Exists(user) {
+    if userStorage.Exists(&user) {
 
     }
 
@@ -25,15 +25,15 @@ func Register(login string, password string) models.User {
     return user
 }
 
-func IsValidUserToRegister (login string, password string) {
+func IsValidUserToRegister (login string, password string) bool {
     user := models.User{
         Username: login,
         Password: password,
     }
 
-    if userStorage.Exists(user) {
-        return
+    if userStorage.Exists(&user) {
+        return false
     }
 
-
+    return true
 }
